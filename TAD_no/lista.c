@@ -179,7 +179,18 @@ int 		lista_info_posicao 		(lista_t *l, int *dado, int pos){//DONE
  * lista seja inválida, a função retorna -1. Caso não seja possível realizar a 
  * inserção por falta de memória, a função deve retornar -1.
  */
-int			lista_insere_cabeca		(lista_t *l, tipo dado);
+int			lista_insere_cabeca		(lista_t *l, tipo dado){
+	if(!l) return -1;
+	no_t *n = cria_no();
+	if(!n) return -1;
+	
+	n->info = dado;
+	n->prx = l->cabeca;
+	l->cabeca = n;
+	n->ant = NULL;
+	l->tamanho++;
+	return 1;
+}
 
 /**
  * @brief Insere um dado na cauda da lista, isto é, na sua última posição.
@@ -194,7 +205,19 @@ int			lista_insere_cabeca		(lista_t *l, tipo dado);
  * lista seja inválida, a função retorna -1. Caso não seja possível realizar a 
  * inserção por falta de memória, a função deve retornar -1.
  */
-int			lista_insere_cauda		(lista_t *l, tipo dado);
+int			lista_insere_cauda		(lista_t *l, tipo dado){
+	if(!l) return -1;
+	no_t *n = cria_no();
+	if(!n) return -1;
+	
+	l->cauda->prx = n;
+	n->info = dado;
+	n->ant = l->cauda;
+	n->prx = NULL;
+	l->cauda = n;
+	l->tamanho++;
+	return 1;
+}
 
 /**
  * @brief Insere um dado em uma posição específica da lista.
@@ -392,9 +415,9 @@ int 		lista_reverte(lista_t *l);
 lista_t*	lista_cria_copia(lista_t *l);
 
 no_t* caminha_lista(lista_t *l,int pos){
-	no_t *temp = l->cabeca->prx;
+	no_t *temp = l->cabeca;
 	int i = 0;
-	while(i!=pos){
+	while(i<pos){
 		temp = temp->prx;
 		i++;
 	}
@@ -436,8 +459,19 @@ int main (){
 	n4->prx = NULL;
 	n4->ant = n3;
 	
-	int d = lista_info_posicao(t,dado,3);
-	printf("%d",d);
+	printf("Test: info_posicao (tirando dado da posição 1)\n");
+	int d = lista_info_posicao(t,dado,1);
+	printf("%d Dado da posição %d\n",d,*dado);
+	
+	printf("Test: insere_cabeca (inserindo 35 na cabeça)\n");
+	d = lista_insere_cabeca(t,35);
+	int z = lista_info_posicao(t,dado,0);
+	printf("%d Dado da posição %d\n",z,*dado);
+	
+	printf("Test: insere_cauda (inserindo 40 na cabeça)\n");
+	d = lista_insere_cauda(t,40);
+	z = lista_info_posicao(t,dado,5);
+	printf("%d Dado da posição %d\n",z,*dado);
 
 	return 0;
 }
