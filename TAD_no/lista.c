@@ -438,6 +438,6 @@ int main (){
 	
 	int d = lista_info_posicao(t,dado,3);
 	printf("%d",d);
-	
+	//teste1
 	return 0;
 }
