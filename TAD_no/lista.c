@@ -249,14 +249,18 @@ int			lista_insere_posicao	(lista_t *l, tipo dado, int pos){
 		return 1;
 	}		
 	
-	no_t *na_lista = caminha_lista(l,pos);
+	no_t *na_listaF = caminha_lista(l,pos);
+	no_t *na_listaB = caminha_lista(l,pos-1);
 	
 	no_t *new = cria_no();
 	
+	if (!new) return 0;
+	
 	new->info = dado;
-	new->ant = na_lista->ant;
-	na_lista->ant = new;
-	new->prx = na_lista;
+	new->ant = na_listaF->ant;
+	new->prx = na_listaF;
+	na_listaF->ant = new;
+	na_listaB->prx = new;
 	
 	l->tamanho++;
 	
@@ -281,7 +285,23 @@ int			lista_insere_posicao	(lista_t *l, tipo dado, int pos){
  * lor removido da lista, ou seja, ele continua inalterado. Caso dado seja nulo 
  * retorna -1.
  */
-int			lista_remove_cabeca		(lista_t *l, tipo *dado);
+int			lista_remove_cabeca		(lista_t *l, tipo *dado){
+	if(!dado) return -1;
+	if(!lista_inicializada(l)) return -1;
+	if(!(l->tamanho)) return 0;
+	
+	no_t *temp;
+	temp = l->cabeca;
+	
+	l->cabeca = temp->prx;
+	temp->prx = NULL;
+	free(temp->prx);
+	free(temp->ant);
+	free(temp);
+	
+	return 1;
+	
+}
 
 /**
  * @brief Remove o elemento da cauda da lista (última posição)
@@ -459,60 +479,19 @@ no_t* cria_no(){
 
 int main (){
 	lista_t *t = lista_cria();
-	no_t *n1 = cria_no();
-	no_t *n2 = cria_no();
-	no_t *n3 = cria_no();
-	no_t *n4 = cria_no();
 	int v = -1;
 	int *dado = &v;
-	
-	t->cabeca = n1;
-	t->cauda = n4;
-	t->tamanho = 4;
-	
-	n1->info = 17;
-	n1->prx = n2;
-	n1->ant = NULL;
-	
-	n2->info = 1;
-	n2->prx = n3;
-	n2->ant = n1;
-	
-	n3->info = 5;
-	n3->prx = n4;
-	n3->ant = n2;
-	
-	n4->info = 20;
-	n4->prx = NULL;
-	n4->ant = n3;
-	
-	printf("Test: info_posicao (tirando dado da posição 1)\n");
-	int d = lista_info_posicao(t,dado,1);
-	printf("%d Dado da posição %d\n",d,*dado);
-	
-	printf("Test: insere_cabeca (inserindo 35 na cabeça)\n");
-	d = lista_insere_cabeca(t,35);
-	int z = lista_info_posicao(t,dado,0);
-	printf("%d Dado da posição %d\n",z,*dado);
-	
-	printf("Test: insere_cauda (inserindo 40 na cauda)\n");
-	d = lista_insere_cauda(t,40);
-	z = lista_info_posicao(t,dado,5);
-	printf("%d Dado da posição %d\n",z,*dado);
+	lista_insere_cabeca(t,0);
+	lista_insere_cauda(t,111);
+	for(int i=0;i<20;i++){
+		lista_insere_posicao(t,i+2,i);
+	}
 	
 	for(int i =0;i<t->tamanho;i++){
 		printf("%d ",caminha_lista(t,i)->info);
 	}
 	printf("\n");
-	printf("%d\n",t->tamanho);
-	printf("Test: insere_posição (inserindo 69 na posição 4)\n");
-	d = lista_insere_posicao(t,69,6);
-	//z = lista_info_posicao(t,dado,4);
-	//printf("%d Dado da posição %d\n",z,*dado);
-
-	for(int i =0;i<t->tamanho;i++){
-		printf("%d ",caminha_lista(t,i)->info);
-	}
-	printf("\n");
+	free(t);
+	
 	return 0;
 }
