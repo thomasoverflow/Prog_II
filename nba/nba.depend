@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1696642527 source:/home/thomas/Documents/Prog.II/nba/main.c
+	<stdio.h>
+	<stdlib.h>
+	"nba_stats.h"
+
+1696372783 /home/thomas/Documents/Prog.II/nba/nba_stats.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1696905517 source:/home/thomas/Documents/Prog.II/nba/nba_stats.c
+	"nba_stats.h"
+
