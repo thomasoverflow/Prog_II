@@ -236,7 +236,34 @@ int			lista_insere_cauda		(lista_t *l, tipo dado){
  * lista seja inválida, a função retorna -1. Se a posição passada como parâme-
  * tro for inválida, a função retorna 0. 
  */
-int			lista_insere_posicao	(lista_t *l, tipo dado, int pos);
+int			lista_insere_posicao	(lista_t *l, tipo dado, int pos){
+	if(!l) return -1;
+	if(pos<0 || pos > l->tamanho) return 0;
+	
+	if(pos == 0){
+		lista_insere_cabeca(l,dado);
+		return 1;
+	}
+	if(pos == l->tamanho){
+		lista_insere_cauda(l,dado);
+		return 1;
+	}		
+	
+	no_t *na_lista = caminha_lista(l,pos);
+	
+	no_t *new = cria_no();
+	
+	new->info = dado;
+	new->ant = na_lista->ant;
+	na_lista->ant = new;
+	new->prx = na_lista;
+	
+	l->tamanho++;
+	
+	return 1;
+	
+	//Karen Araujo de Oliveira
+}
 
 /**
  * @brief Remove o elemento da cabeça da lista (primeira posição)
@@ -468,10 +495,24 @@ int main (){
 	int z = lista_info_posicao(t,dado,0);
 	printf("%d Dado da posição %d\n",z,*dado);
 	
-	printf("Test: insere_cauda (inserindo 40 na cabeça)\n");
+	printf("Test: insere_cauda (inserindo 40 na cauda)\n");
 	d = lista_insere_cauda(t,40);
 	z = lista_info_posicao(t,dado,5);
 	printf("%d Dado da posição %d\n",z,*dado);
+	
+	for(int i =0;i<t->tamanho;i++){
+		printf("%d ",caminha_lista(t,i)->info);
+	}
+	printf("\n");
+	printf("%d\n",t->tamanho);
+	printf("Test: insere_posição (inserindo 69 na posição 4)\n");
+	d = lista_insere_posicao(t,69,6);
+	//z = lista_info_posicao(t,dado,4);
+	//printf("%d Dado da posição %d\n",z,*dado);
 
+	for(int i =0;i<t->tamanho;i++){
+		printf("%d ",caminha_lista(t,i)->info);
+	}
+	printf("\n");
 	return 0;
 }
