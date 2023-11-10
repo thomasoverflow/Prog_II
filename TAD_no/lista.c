@@ -185,9 +185,18 @@ int			lista_insere_cabeca		(lista_t *l, tipo dado){
 	if(!n) return -1;
 	
 	n->info = dado;
-	n->prx = l->cabeca;
-	l->cabeca = n;
-	n->ant = NULL;
+	if(l->tamanho==0){
+		l->cabeca = n;
+		n->ant = NULL;
+		n->prx = NULL;
+	}
+	
+	if(l->tamanho>0){
+		n->prx = l->cabeca;
+		l->cabeca = n;
+		n->ant = NULL; 
+	}
+	
 	l->tamanho++;
 	return 1;
 }
@@ -481,17 +490,18 @@ int main (){
 	lista_t *t = lista_cria();
 	int v = -1;
 	int *dado = &v;
+	
 	lista_insere_cabeca(t,0);
-	lista_insere_cauda(t,111);
-	for(int i=0;i<20;i++){
+	//lista_insere_cauda(t,111);
+	
+	/*for(int i=0;i<20;i++){
 		lista_insere_posicao(t,i+2,i);
-	}
+	}*/
 	
 	for(int i =0;i<t->tamanho;i++){
 		printf("%d ",caminha_lista(t,i)->info);
 	}
 	printf("\n");
-	free(t);
 	
 	return 0;
 }
