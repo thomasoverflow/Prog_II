@@ -312,8 +312,7 @@ int			lista_remove_cabeca		(lista_t *l, tipo *dado){
 	
 	l->cabeca = temp->prx;
 	temp->prx = NULL;
-	free(temp->prx);
-	free(temp->ant);
+
 	free(temp);
 
     l->tamanho--;
@@ -337,7 +336,22 @@ int			lista_remove_cabeca		(lista_t *l, tipo *dado){
  * lor removido da lista, ou seja, ele continua inalterado. Caso dado seja nulo
  * retorna -1.
  */
-int			lista_remove_cauda		(lista_t *l, tipo *dado);
+int			lista_remove_cauda		(lista_t *l, tipo *dado){
+    if(!dado) return -1;
+    if(!lista_inicializada(l)) return -1;
+    if(!(l->tamanho)) return 0;
+
+    no_t *temp;
+    temp = l->cauda;
+
+    l->cauda = temp->ant;
+    temp->ant= NULL;
+
+    free(temp);
+
+    l->tamanho--;
+    return 1;
+}
 
 /**
  * @brief Remove o dado de uma determinada posição da lista
@@ -360,7 +374,33 @@ int			lista_remove_cauda		(lista_t *l, tipo *dado);
  * lor removido da lista, ou seja, ele continua inalterado. Caso dado seja nulo
  * retorna -1.
  */
-int			lista_remove_posicao	(lista_t *l, tipo *dado, int pos);
+int			lista_remove_posicao	(lista_t *l, tipo *dado, int pos){
+    if(!l) return -1;
+    if(!dado) return -1;
+    if(pos<0 || pos > l->tamanho) return 0;
+
+
+    if(pos == 0){
+        lista_remove_cabeca(l,dado);
+        return 1;
+    }
+    if(pos == l->tamanho){
+        lista_remove_cauda(l,dado);
+        return 1;
+    }
+
+    no_t *temp = cria_no();
+
+    temp = caminha_lista(l,pos);
+    *dado = temp->info;
+
+    temp->ant->prx = temp->prx;
+    temp->prx->ant = temp->ant;
+
+    free(temp);
+    l->tamanho--;
+    return 1;
+}
 
 /**
  * @brief Remove a primeira ocorrência de dado na lisa l
@@ -373,7 +413,19 @@ int			lista_remove_posicao	(lista_t *l, tipo *dado, int pos);
  * válida, a função retorna -1. Caso o dado não faça parte da lista, a função 
  * retorna -2.
  */
-int 		lista_remove_primeira	(lista_t *l, tipo dado);
+int 		lista_remove_primeira	(lista_t *l, tipo dado){
+    if(!l) return -1;
+    int *temp;
+
+    for(int i=0;i<l->tamanho;i++){
+        if(caminha_lista(l,i)->info == dado){
+            lista_remove_posicao(l,temp,i);
+            l->tamanho--;
+            return i;
+        }
+    }
+    return -2;
+}
 
 /**
  * @brief Remove todas as ocorrências do valor dado na lista l
@@ -385,7 +437,20 @@ int 		lista_remove_primeira	(lista_t *l, tipo dado);
  * @return Caso seja possível fazer as remoções, retorna o número de remoções 
  * realizadas. Caso a lista seja inválida, retorna -1.
  */
-int 		lista_remove_todas		(lista_t *l, tipo dado);
+int 		lista_remove_todas		(lista_t *l, tipo dado){
+    if(!l) return -1;
+    int *temp;
+    int rep;
+
+    for(int i=0;i<l->tamanho;i++){
+        if(caminha_lista(l,i)->info == dado){
+            lista_remove_posicao(l,temp,i);
+            l->tamanho--;
+            rep++;
+        }
+    }
+    return rep;
+}
 
 /**
  * @brief Busca um dado na lista l
@@ -397,7 +462,15 @@ int 		lista_remove_todas		(lista_t *l, tipo dado);
  * @return Caso encontre, retorna sua posição na lista. Caso a lista seja invá-
  * lida, vazia ou não seja possível encontrar o elemento, a função retorna -1.
  */
-int 		lista_busca_info		(lista_t *l, tipo dado);
+int 		lista_busca_info		(lista_t *l, tipo dado){
+    if(!l) return -1;
+    if(l->tamanho==0) return -1;
+
+    for(int i; i<l->tamanho;i++){
+        if(caminha_lista(l,i)->info == dado) return i;
+    }
+    return -1;
+}
 
 /**
  * @brief Determina a frequência de um dado na lista
@@ -500,8 +573,8 @@ int main (){
 	int v = -1;
 	int *dado = &v;
 	printf("%d\n",t->tamanho);
-	lista_insere_cabeca(t,0);
-	lista_insere_cauda(t,111);
+	//lista_insere_cabeca(t,0);
+	//lista_insere_cauda(t,111);
 
 	printf("%d\n",t->tamanho);
 	for(int i=0;i<20;i++){
@@ -513,12 +586,23 @@ int main (){
 	}
 	printf("\n");
 
-    lista_remove_cabeca(t,dado);
-
+   //lista_remove_posicao(t,dado,3);
     for(int i =0;i<t->tamanho;i++){
         printf("%d ",caminha_lista(t,i)->info);
     }
     printf("\n");
 
+
+    lista_insere_cauda(t,8);
+    for(int i =0;i<t->tamanho;i++){
+        printf("%d ",caminha_lista(t,i)->info);
+    }
+    printf("\n");
+
+    lista_remove_todas(t,8);
+    for(int i =0;i<t->tamanho;i++){
+        printf("%d ",caminha_lista(t,i)->info);
+    }
+    printf("\n");
 	return 0;
 }
