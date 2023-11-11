@@ -42,6 +42,7 @@ lista_t*	lista_cria				(){//DONE
 	if(!nova) return NULL;
 	nova->cabeca = NULL;
 	nova->cauda = NULL;
+    nova->tamanho=0;
 	return nova;
 }
 
@@ -58,14 +59,14 @@ lista_t*	lista_cria				(){//DONE
  */
 
 void		lista_destroi			(lista_t **l){//DONE
-	if(!(*l)) return ;
+	if((*l)==NULL && l==NULL) return ;
 	
 	no_t *temp = (*l)->cabeca;
-	no_t *temp2;
+	no_t *temp2 = NULL;
 	while(!temp){
-		temp2 = temp->prx;
-		free(temp);
-		temp = temp2;
+		temp2 = temp;
+        temp = temp->prx;
+		free(temp2);
 	}
 	
 	free(*l);
@@ -632,50 +633,51 @@ no_t* cria_no(){
 }
 
 int main (){
-	lista_t *t = lista_cria();
+	//lista_t *t = lista_cria();
+    lista_t *t = NULL;
 	int v = -1;
 	int *dado = &v;
-	printf("%d\n",t->tamanho);
+	printf("%d\n", lista_tamanho(t));
 	//lista_insere_cabeca(t,0);
 	//lista_insere_cauda(t,111);
 
-	printf("%d\n",t->tamanho);
+    printf("%d\n", lista_tamanho(t));
 	for(int i=0;i<20;i++){
 		lista_insere_posicao(t,i+2,i);
 	}
 	
-	for(int i =0;i<t->tamanho;i++){
+	for(int i =0;i<lista_tamanho(t);i++){
 		printf("%d ",caminha_lista(t,i)->info);
 	}
 	printf("\n");
 
    //lista_remove_posicao(t,dado,3);
-    for(int i =0;i<t->tamanho;i++){
+    for(int i =0;i<lista_tamanho(t);i++){
         printf("%d ",caminha_lista(t,i)->info);
     }
     printf("\n");
 
 
     lista_insere_cauda(t,8);
-    for(int i =0;i<t->tamanho;i++){
+    for(int i =0;i<lista_tamanho(t);i++){
         printf("%d ",caminha_lista(t,i)->info);
     }
     printf("\n");
 
     lista_remove_todas(t,8);
-    for(int i =0;i<t->tamanho;i++){
+    for(int i =0;i<lista_tamanho(t);i++){
         printf("%d ",caminha_lista(t,i)->info);
     }
     printf("\n");
 
     printf("%d\n", lista_insere_ordenado(t,1));
-    for(int i =0;i<t->tamanho;i++){
+    for(int i =0;i<lista_tamanho(t);i++){
        printf("%d ",caminha_lista(t,i)->info);
     }
     printf("\n");
 
     printf("%d\n", lista_reverte(t));
-    for(int i =0;i<t->tamanho;i++){
+    for(int i =0;i<lista_tamanho(t);i++){
         printf("%d ",caminha_lista(t,i)->info);
     }
     printf("\n");
