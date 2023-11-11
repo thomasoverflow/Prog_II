@@ -346,7 +346,7 @@ int			lista_remove_cauda		(lista_t *l, tipo *dado){
 
     l->cauda = temp->ant;
     temp->ant= NULL;
-
+    l->cauda->prx = NULL;
     free(temp);
 
     l->tamanho--;
@@ -440,12 +440,20 @@ int 		lista_remove_primeira	(lista_t *l, tipo dado){
 int 		lista_remove_todas		(lista_t *l, tipo dado){
     if(!l) return -1;
     int *temp;
-    int rep;
+    int rep=0;
 
     for(int i=0;i<l->tamanho;i++){
         if(caminha_lista(l,i)->info == dado){
+            if(i==0){
+                lista_remove_cabeca(l,temp);
+                rep++;
+            }
+            if(i==l->tamanho-1){
+                lista_remove_cauda(l,temp);
+                rep++;
+                return rep;
+            }
             lista_remove_posicao(l,temp,i);
-            l->tamanho--;
             rep++;
         }
     }
@@ -482,7 +490,14 @@ int 		lista_busca_info		(lista_t *l, tipo dado){
  * @return A frequência com que dado aparece na lista. Retorna -1 caso a lista
  * seja inválida.
  */
-int 		lista_frequencia_info	(lista_t *l, tipo dado);
+int 		lista_frequencia_info	(lista_t *l, tipo dado){
+    if(!l) return -1;
+    int rep=0;
+    for(int i=0;i<l->tamanho;i++){
+        if(caminha_lista(l,i)->info == dado) rep++;
+    }
+    return rep;
+}
 
 /**
  * @brief Verifica se uma lista está ordenada em ordem crescente de valores
@@ -494,7 +509,14 @@ int 		lista_frequencia_info	(lista_t *l, tipo dado);
  * @return Se a lista estiver em ordem, retorna 1. Caso esteja fora de ordem, 
  * a função retorna 0. Para uma lista inválida, retorna -1.
  */
-int			lista_ordenada 			(lista_t *l);
+int			lista_ordenada 			(lista_t *l){
+    if(!l) return -1;
+
+    for(int i=0;i<l->tamanho-1;i++){
+        if(caminha_lista(l,i)->info > caminha_lista(l,i+1)->info) return 0;
+    }
+    return 1;
+}
 
 /**
  * @brief Insere um elemento de forma ordenada em uma lista. 
@@ -509,7 +531,20 @@ int			lista_ordenada 			(lista_t *l);
  * 
  * @return Retorna 1 caso seja possível realizar a inserção e -1 caso contrário.
  */
-int 		lista_insere_ordenado	(lista_t *l, tipo dado);
+int 		lista_insere_ordenado	(lista_t *l, tipo dado){
+    if(!l) return -1;
+    int i;
+    for(i=0;i<l->tamanho;i++){
+        if(dado < caminha_lista(l,i)->info){
+            lista_insere_posicao(l,dado,i);
+            return 1;
+        }
+    }
+    if(i==l->tamanho){
+        lista_insere_cauda(l,dado);
+    }
+    return -1;
+}
 
 /**
  * @brief Compara as listas l1 e l2 quanto à sua igualdade.
@@ -523,7 +558,15 @@ int 		lista_insere_ordenado	(lista_t *l, tipo dado);
  * @return Retorna: 1 caso as listas sejam iguais, 0 cao sejam diferentes. Duas
  * listas não inicializadas são iguais.
  */
-int 		lista_compara(lista_t *l1, lista_t *l2);
+int 		lista_compara(lista_t *l1, lista_t *l2){
+    if(!l1 && !l2) return 1;
+    if(l1->tamanho != l2->tamanho) return 0;
+
+    for(int i=0;i<l1->tamanho;i++){
+        if(caminha_lista(l1,i) != caminha_lista(l2,i)) return 0;
+    }
+    return 1;
+}
 
 /**
  * @brief Reverte a ordem dos elementos de uma lista
@@ -535,7 +578,17 @@ int 		lista_compara(lista_t *l1, lista_t *l2);
  * retorna -1.
  */
 
-int 		lista_reverte(lista_t *l);
+int 		lista_reverte(lista_t *l){
+    if(!l) return -1;
+    int temp = 0;
+
+    for(int i=0; i<(l->tamanho/2);i++){
+        temp = caminha_lista(l,i)->info;
+        caminha_lista(l,i)->info = caminha_lista(l,l->tamanho-i-1)->info;
+        caminha_lista(l,l->tamanho-i-1)->info = temp;
+    }
+    return 1;
+}
 
 /**
  * @brief Cria uma cópia da lista l
@@ -550,7 +603,17 @@ int 		lista_reverte(lista_t *l);
  * possível fazer a cópia.
  */
 
-lista_t*	lista_cria_copia(lista_t *l);
+lista_t*	lista_cria_copia(lista_t *l){
+    if(!l) return NULL;
+    lista_t *new = lista_cria();
+    if(!new) return NULL;
+
+    new->tamanho = l->tamanho;
+    new->cabeca = l->cabeca;
+    new->cauda = l->cauda;
+
+    return new;
+}
 
 no_t* caminha_lista(lista_t *l,int pos){
 	no_t *temp = l->cabeca;
@@ -604,5 +667,18 @@ int main (){
         printf("%d ",caminha_lista(t,i)->info);
     }
     printf("\n");
+
+    printf("%d\n", lista_insere_ordenado(t,1));
+    for(int i =0;i<t->tamanho;i++){
+       printf("%d ",caminha_lista(t,i)->info);
+    }
+    printf("\n");
+
+    printf("%d\n", lista_reverte(t));
+    for(int i =0;i<t->tamanho;i++){
+        printf("%d ",caminha_lista(t,i)->info);
+    }
+    printf("\n");
+
 	return 0;
 }
