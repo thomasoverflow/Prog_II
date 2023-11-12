@@ -181,45 +181,49 @@ int			lista_insere_posicao	(lista_t *l, tipo dado, int pos){
 
 int			lista_remove_cabeca		(lista_t *l, tipo *dado){
     if(!l || !dado) return -1;
-    if(!(l->tamanho)) return 0;
+    if((l->tamanho)==0) return 0;
 
+    if(l->tamanho==1){
+        *dado = l->cabeca->info;
+        free(l->cabeca);
+        l->cauda = NULL;
+        l->cabeca = NULL;
+        l->tamanho--;
+        return 1;
+    }
     no_t *temp;
-    temp = l->cabeca;
     *dado = l->cabeca->info;
-    l->cabeca = temp->prx;
-    temp->prx = NULL;
-
-    free(temp);
-
+    temp = l->cabeca->prx;
+    l->cabeca->prx = NULL;
+    free(l->cabeca);
+    l->cabeca = temp;
     l->tamanho--;
 
-    if(l->tamanho==0){
-        l->cauda = NULL;
-    }
-
     return 1;
-
-}
+}//For test
 
 
 int			lista_remove_cauda		(lista_t *l, tipo *dado){
     if(!l || !dado) return -1;
     if(l->tamanho==0) return 0;
 
+    if(l->tamanho==1){
+        int ret = lista_remove_cabeca(l,dado);
+        return ret;
+    }
+
     no_t *temp;
-    temp = l->cauda;
-    *dado = l->cabeca->info;
-    l->cauda = temp->ant;
-    temp->ant= NULL;
+
+    *dado = l->cauda->info;
+    temp = l->cauda->ant;
+    l->cauda->ant = NULL;
+    free(l->cauda);
+    l->cauda = temp;
     l->cauda->prx = NULL;
-    free(temp);
 
     l->tamanho--;
-    if(l->tamanho==0){
-        l->cabeca =NULL;
-    }
     return 1;
-}
+}//For Test
 
 
 int			lista_remove_posicao	(lista_t *l, tipo *dado, int pos){
@@ -229,14 +233,14 @@ int			lista_remove_posicao	(lista_t *l, tipo *dado, int pos){
 
 
     if(pos == 0){
-        lista_remove_cabeca(l,dado);
-        return 1;
+        int ret = lista_remove_cabeca(l,dado);
+        return ret;
     }
     if(pos == l->tamanho-1){
-        lista_remove_cauda(l,dado);
-        return 1;
+        int ret = lista_remove_cauda(l,dado);
+        return ret;
     }
-
+    //PAREI AQUI!
     no_t *temp = cria_no();
 
     temp = caminha_lista(l,pos);
