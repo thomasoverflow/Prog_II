@@ -13,19 +13,18 @@
 
 // Estrutura de nó duplamente encadeado
 struct no {
-	tipo 		 info;		//Informação (dado) armazenada no nó
-	struct no	*ant;		//Ponteiro para o nó anterior
-	struct no	*prx;		//Ponteiro para o próximo nó
+    tipo 		 info;		//Informação (dado) armazenada no nó
+    struct no	*ant;		//Ponteiro para o nó anterior
+    struct no	*prx;		//Ponteiro para o próximo nó
 };
 
 //Estrutura de lista duplamente encadeada com nós
 struct lista {
-	no_t 		*cabeca;	//Ponteiro para a cabeça da lista (primeiro)
-	no_t 		*cauda;		//Ponteiro para a cauda da lista (último)
-	int 		tamanho;	//Tamanho atual da lista
+    no_t 		*cabeca;	//Ponteiro para a cabeça da lista (primeiro)
+    no_t 		*cauda;		//Ponteiro para a cauda da lista (último)
+    int 		tamanho;	//Tamanho atual da lista
 };
 
-// Coloque a partir daqui a implementação das funções
 
 lista_t*	lista_cria				(){//DONE
     lista_t* nova = (lista_t*)malloc(sizeof(lista_t));
@@ -178,7 +177,6 @@ int			lista_insere_posicao	(lista_t *l, tipo dado, int pos){
 
 }
 
-
 int			lista_remove_cabeca		(lista_t *l, tipo *dado){
     if(!l || !dado) return -1;
     if((l->tamanho)==0) return 0;
@@ -191,16 +189,18 @@ int			lista_remove_cabeca		(lista_t *l, tipo *dado){
         l->tamanho--;
         return 1;
     }
+
     no_t *temp;
     *dado = l->cabeca->info;
     temp = l->cabeca->prx;
     l->cabeca->prx = NULL;
     free(l->cabeca);
     l->cabeca = temp;
+    l->cabeca->ant = NULL;
     l->tamanho--;
 
     return 1;
-}//For test
+}
 
 
 int			lista_remove_cauda		(lista_t *l, tipo *dado){
@@ -223,7 +223,7 @@ int			lista_remove_cauda		(lista_t *l, tipo *dado){
 
     l->tamanho--;
     return 1;
-}//For Test
+}
 
 
 int			lista_remove_posicao	(lista_t *l, tipo *dado, int pos){
@@ -241,7 +241,7 @@ int			lista_remove_posicao	(lista_t *l, tipo *dado, int pos){
         return ret;
     }
     //PAREI AQUI!
-    no_t *temp = cria_no();
+    no_t *temp;
 
     temp = caminha_lista(l,pos);
     *dado = temp->info;
@@ -257,30 +257,31 @@ int			lista_remove_posicao	(lista_t *l, tipo *dado, int pos){
 
 int 		lista_remove_primeira	(lista_t *l, tipo dado){
     if(!l) return -1;
-    int *temp;
+    if(l->tamanho==0) return -2;
+    int t = 2;
+    int *temp = &t;
 
     for(int i=0;i<l->tamanho;i++){
         if(caminha_lista(l,i)->info == dado){
             lista_remove_posicao(l,temp,i);
-            l->tamanho--;
             return i;
         }
     }
+    free(temp);
     return -2;
 }
-
 
 int 		lista_remove_todas		(lista_t *l, tipo dado){
     if(!l) return -1;
     if(l->tamanho==0) return -0;
-    int *temp;
+    int t = 2;
+    int *temp = &t;
     int rep=0;
 
     for(int i=0;i<l->tamanho;i++){
         if(caminha_lista(l,i)->info == dado){
             if(i==0){
                 lista_remove_cabeca(l,temp);
-                rep++;
             }
             if(i==l->tamanho-1){
                 lista_remove_cauda(l,temp);
@@ -292,7 +293,7 @@ int 		lista_remove_todas		(lista_t *l, tipo dado){
         }
     }
     return rep;
-}
+}//For test
 
 
 int 		lista_busca_info		(lista_t *l, tipo dado){
@@ -335,20 +336,23 @@ int 		lista_insere_ordenado	(lista_t *l, tipo dado){
     }
     if(i==l->tamanho){
         lista_insere_cauda(l,dado);
+        return 1;
     }
     return -1;
 }
 
+//Daqui pra baixo código quebra tempo limite
 
 int 		lista_compara(lista_t *l1, lista_t *l2){
     if(!l1 && !l2) return 1;
+    if(!l1 || !l2) return 0;
     if(l1->tamanho != l2->tamanho) return 0;
 
     for(int i=0;i<l1->tamanho;i++){
-        if(caminha_lista(l1,i) != caminha_lista(l2,i)) return 0;
+        if(caminha_lista(l1,i)->info != caminha_lista(l2,i)->info) return 0;
     }
     return 1;
-}
+}//SIGSEGV
 
 
 
@@ -366,15 +370,15 @@ int 		lista_reverte(lista_t *l){
 
 
 lista_t*	lista_cria_copia(lista_t *l){
-    if(!l) return NULL;
-    lista_t *new = lista_cria();
-    if(!new) return NULL;
+    /* if(!l) return NULL;
+     lista_t *new = lista_cria();
+     if(!new) return NULL;
 
-    new->tamanho = l->tamanho;
-    new->cabeca = l->cabeca;
-    new->cauda = l->cauda;
+     new->tamanho = l->tamanho;
+     new->cabeca = l->cabeca;
+     new->cauda = l->cauda;
 
-    return new;
+     return new;*/
 }
 
 no_t* caminha_lista(lista_t *l,int pos){
@@ -398,50 +402,34 @@ int main (){
     //lista_t *t = NULL;
 	int v = -1;
 	int *dado = &v;
-	printf("%d\n", lista_tamanho(t));
-	//lista_insere_cabeca(t,0);
-	//lista_insere_cauda(t,111);
-    lista_destroi(t);
-    printf("%d\n", lista_tamanho(t));
-	for(int i=0;i<20;i++){
-		lista_insere_posicao(t,i+2,i);
-	}
-	
-	for(int i =0;i<lista_tamanho(t);i++){
-		printf("%d ",caminha_lista(t,i)->info);
-	}
-	printf("\n Remove Posição\n");
 
-   lista_remove_posicao(t,dado,19);
+	for(int i=0;i<20;i++) {
+        lista_insere_posicao(t, i + 2, i);
+    }
+    /*//lista_insere_cauda(t,8);
+    //lista_insere_cabeca(t,8);
+    //lista_insere_posicao(t,8,10);
+    int d = lista_insere_ordenado(t,22);
+    for(int i =0;i<lista_tamanho(t);i++){
+        printf("%d ",caminha_lista(t,i)->info);
+    }
+    printf("\n%d ",d);*/
+
+    lista_t *j = lista_cria();
+   for(int i=0;i<20;i++) {
+        lista_insere_posicao(j, i + 2, i);
+    }
+    printf("\n");
     for(int i =0;i<lista_tamanho(t);i++){
         printf("%d ",caminha_lista(t,i)->info);
     }
     printf("\n");
-
-
-    lista_insere_cauda(t,8);
-    for(int i =0;i<lista_tamanho(t);i++){
-        printf("%d ",caminha_lista(t,i)->info);
+    lista_insere_posicao(j,66,5);
+    for(int i =0;i<lista_tamanho(j);i++){
+        printf("%d ",caminha_lista(j,i)->info);
     }
-    printf("\n Remove Primeira\n");
 
-    lista_remove_primeira(t,8);
-    for(int i =0;i<lista_tamanho(t);i++){
-        printf("%d ",caminha_lista(t,i)->info);
-    }
-    printf("\n");
-
-    printf("%d\n", lista_insere_ordenado(t,1));
-    for(int i =0;i<lista_tamanho(t);i++){
-       printf("%d ",caminha_lista(t,i)->info);
-    }
-    printf("\n");
-
-    printf("%d\n", lista_reverte(t));
-    for(int i =0;i<lista_tamanho(t);i++){
-        printf("%d ",caminha_lista(t,i)->info);
-    }
-    printf("\n");
-
+    int d = lista_compara(t,j);
+    printf("\n%d",d);
 	return 0;
 }
