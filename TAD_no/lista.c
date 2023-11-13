@@ -133,9 +133,9 @@ int			lista_insere_cauda		(lista_t *l, tipo dado){
         if(!n) return -1;
 
         n->info = dado;
-        l->cauda->prx = n;
-        n->ant = l->cauda;
         n->prx = NULL;
+        n->ant = l->cauda;
+        l->cauda->prx = n;
         l->cauda = n;
         l->tamanho++;
     }
@@ -282,18 +282,24 @@ int 		lista_remove_todas		(lista_t *l, tipo dado){
         if(caminha_lista(l,i)->info == dado){
             if(i==0){
                 lista_remove_cabeca(l,temp);
+                rep++;
+                i = 0;
             }
-            if(i==l->tamanho-1){
+            else if(i==l->tamanho-1){
                 lista_remove_cauda(l,temp);
                 rep++;
-                return rep;
+                i = 0;
             }
-            lista_remove_posicao(l,temp,i);
-            rep++;
+            else{
+                lista_remove_posicao(l,temp,i);
+                rep++;
+                i = 0;
+            }
+
         }
     }
     return rep;
-}//For test
+}
 
 
 int 		lista_busca_info		(lista_t *l, tipo dado){
@@ -341,7 +347,6 @@ int 		lista_insere_ordenado	(lista_t *l, tipo dado){
     return -1;
 }
 
-//Daqui pra baixo código quebra tempo limite
 
 int 		lista_compara(lista_t *l1, lista_t *l2){
     if(!l1 && !l2) return 1;
@@ -352,7 +357,7 @@ int 		lista_compara(lista_t *l1, lista_t *l2){
         if(caminha_lista(l1,i)->info != caminha_lista(l2,i)->info) return 0;
     }
     return 1;
-}//SIGSEGV
+}
 
 
 
@@ -370,16 +375,24 @@ int 		lista_reverte(lista_t *l){
 
 
 lista_t*	lista_cria_copia(lista_t *l){
-    /* if(!l) return NULL;
+    if(!l) return NULL;
      lista_t *new = lista_cria();
      if(!new) return NULL;
 
-     new->tamanho = l->tamanho;
-     new->cabeca = l->cabeca;
-     new->cauda = l->cauda;
+     no_t *temp = l->cabeca;
+     //new->tamanho = l->tamanho;
 
-     return new;*/
-}
+    int ret = lista_insere_cabeca(new,temp->info);
+    if(ret != 1) return NULL;
+    temp = temp->prx;
+
+     while(temp!=NULL){
+         int ret = lista_insere_cauda(new,temp->info);
+         if(ret != 1) return NULL;
+         temp = temp->prx;
+     }
+     return new;
+}//SIGSEGV
 
 no_t* caminha_lista(lista_t *l,int pos){
     no_t *temp = l->cabeca;
@@ -403,33 +416,22 @@ int main (){
 	int v = -1;
 	int *dado = &v;
 
-	for(int i=0;i<20;i++) {
-        lista_insere_posicao(t, i + 2, i);
-    }
-    /*//lista_insere_cauda(t,8);
-    //lista_insere_cabeca(t,8);
-    //lista_insere_posicao(t,8,10);
-    int d = lista_insere_ordenado(t,22);
-    for(int i =0;i<lista_tamanho(t);i++){
-        printf("%d ",caminha_lista(t,i)->info);
-    }
-    printf("\n%d ",d);*/
-
-    lista_t *j = lista_cria();
-   for(int i=0;i<20;i++) {
-        lista_insere_posicao(j, i + 2, i);
-    }
-    printf("\n");
-    for(int i =0;i<lista_tamanho(t);i++){
-        printf("%d ",caminha_lista(t,i)->info);
-    }
-    printf("\n");
-    lista_insere_posicao(j,66,5);
-    for(int i =0;i<lista_tamanho(j);i++){
-        printf("%d ",caminha_lista(j,i)->info);
+	for(int i=0;i<6;i++) {
+        lista_insere_cauda(t,i);
     }
 
-    int d = lista_compara(t,j);
-    printf("\n%d",d);
+    no_t *temp = t->cabeca;
+    while(temp!=NULL){
+        printf("%d ", temp->info);
+        temp = temp->prx;
+    }
+    printf("\nPassei aqui\n");
+
+    lista_t *new = lista_cria_copia(t);
+    no_t *temp2 = new->cabeca;
+    while(temp2!=NULL){
+        printf("%d ", temp2->info);
+        temp2 = temp2->prx;
+    }
 	return 0;
 }
