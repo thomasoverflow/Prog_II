@@ -1,6 +1,5 @@
-//
-// Created by thomas on 13/11/23.
-//
+#include "stdio.h"
+#include "stdlib.h"
 
 #ifndef PROG_II_PILHA_H
 #define PROG_II_PILHA_H
