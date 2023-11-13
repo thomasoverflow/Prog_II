@@ -31,6 +31,7 @@ lista_t*	lista_cria				(){//DONE
     if(!nova) return NULL;
     nova->cabeca = NULL;
     nova->cauda = NULL;
+    nova->tamanho = 0;
     return nova;
 }
 
@@ -141,8 +142,7 @@ int			lista_insere_cauda		(lista_t *l, tipo dado){
     }
 
     return 1;
-}
-
+}//Modifiquei Não testado no moodle
 
 int			lista_insere_posicao	(lista_t *l, tipo dado, int pos){
     if(!l) return -1;
@@ -299,14 +299,14 @@ int 		lista_remove_todas		(lista_t *l, tipo dado){
         }
     }
     return rep;
-}
+}//Para Teste
 
 
 int 		lista_busca_info		(lista_t *l, tipo dado){
     if(!l) return -1;
     if(l->tamanho==0) return -1;
 
-    for(int i; i<l->tamanho;i++){
+    for(int i=0; i<l->tamanho;i++){
         if(caminha_lista(l,i)->info == dado) return i;
     }
     return -1;
@@ -314,9 +314,12 @@ int 		lista_busca_info		(lista_t *l, tipo dado){
 
 int 		lista_frequencia_info	(lista_t *l, tipo dado){
     if(!l) return -1;
+    if(l->tamanho==0) return 0;
     int rep=0;
+    no_t *temp = l->cabeca;
     for(int i=0;i<l->tamanho;i++){
-        if(caminha_lista(l,i)->info == dado) rep++;
+        if(temp->info == dado) rep++;
+        temp=temp->prx;
     }
     return rep;
 }
@@ -329,7 +332,6 @@ int			lista_ordenada 			(lista_t *l){
     }
     return 1;
 }
-
 
 int 		lista_insere_ordenado	(lista_t *l, tipo dado){
     if(!l) return -1;
@@ -373,28 +375,24 @@ int 		lista_reverte(lista_t *l){
     return 1;
 }
 
-
 lista_t*	lista_cria_copia(lista_t *l){
     if(!l) return NULL;
-     lista_t *new = lista_cria();
-     if(!new) return NULL;
+    lista_t *nova = lista_cria();
+    if(!nova) return NULL;
 
-     no_t *temp = l->cabeca;
-     //new->tamanho = l->tamanho;
 
-    int ret = lista_insere_cabeca(new,temp->info);
-    if(ret != 1) return NULL;
-    temp = temp->prx;
+    no_t *temp = l->cabeca;
 
-     while(temp!=NULL){
-         int ret = lista_insere_cauda(new,temp->info);
-         if(ret != 1) return NULL;
-         temp = temp->prx;
-     }
-     return new;
-}//SIGSEGV
+    while(temp!=NULL){
+        int ret = lista_insere_cauda(nova,temp->info);
+        if(ret != 1) return NULL;
+        temp = temp->prx;
+    }
+    return nova;
+}//Para teste
 
 no_t* caminha_lista(lista_t *l,int pos){
+
     no_t *temp = l->cabeca;
     int i = 0;
     while(i<pos){
@@ -408,30 +406,4 @@ no_t* cria_no(){
     no_t *n = (no_t*)malloc(sizeof(no_t));
     if(!n) return NULL;
     return n;
-}
-
-int main (){
-	lista_t *t = lista_cria();
-    //lista_t *t = NULL;
-	int v = -1;
-	int *dado = &v;
-
-	for(int i=0;i<6;i++) {
-        lista_insere_cauda(t,i);
-    }
-
-    no_t *temp = t->cabeca;
-    while(temp!=NULL){
-        printf("%d ", temp->info);
-        temp = temp->prx;
-    }
-    printf("\nPassei aqui\n");
-
-    lista_t *new = lista_cria_copia(t);
-    no_t *temp2 = new->cabeca;
-    while(temp2!=NULL){
-        printf("%d ", temp2->info);
-        temp2 = temp2->prx;
-    }
-	return 0;
 }
