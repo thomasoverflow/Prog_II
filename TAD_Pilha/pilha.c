@@ -8,21 +8,44 @@ branch_t* cria_branch(int n){
     branch_t *t = (branch_t*) malloc(sizeof(branch_t));
     if(!t) return NULL;
     t->tamanho = n;
-    t->vetores = (int**) malloc(sizeof(int*)*n);
+    t->vetores = (vector_t **) malloc(sizeof(vector_t*)*n);
 
     for (int i = 0; i < n; i++) {
-        t->vetores[i] = (int *) malloc(n * sizeof(int));
+        t->vetores[i] = cria_vector(n);
     }
+    for(int i = 0; i < n; i++){
+        t->vetores[i]->vetor[0] = i;
+    }
+    return t;
+}
 
+vector_t *cria_vector(int capacidade){
+    vector_t *t = (vector_t *)malloc(sizeof(vector_t));
+    if(t == NULL) return NULL;
+    t->vetor = (int*) malloc(sizeof(int)*capacidade);
+    if (t->vetor == NULL) {
+        free(t);
+        return NULL;
+    }
+    t->capacidade = capacidade;
+    t->tamanho = 1;
     return t;
 }
 
 void destroi_branch(branch_t **l){
     if(!(*l)) return;
     for (int i = 0; i < (*l)->tamanho; i++) {
-        free((*l)->vetores[i]);
+        destroi_vector(&((*l)->vetores[i]));
     }
     free((*l)->vetores);
     free(*l);
     *l = NULL;
+}
+
+
+void destroi_vector(vector_t **v) {
+    if (*v == NULL) return;
+    free((*v)->vetor);
+    free(*v);
+    *v = NULL;
 }
