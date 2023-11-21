@@ -10,10 +10,10 @@ branch_t* cria_branch(int n){
     t->tamanho = n;
     t->vetores = (vector_t **) malloc(sizeof(vector_t*)*n);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i <= n; i++) {
         t->vetores[i] = cria_vector(n);
     }
-    for(int i = 0; i < n; i++){
+    for(int i = 0; i <= n; i++){
         t->vetores[i]->vetor[0] = i;
     }
     return t;
@@ -48,4 +48,13 @@ void destroi_vector(vector_t **v) {
     free((*v)->vetor);
     free(*v);
     *v = NULL;
+}
+
+void find_data(branch_t *b, int valor, int *i, int *j) {
+    for (*i = 0; *i < b->tamanho; (*i)++) {
+        for (*j = 0; *j < b->vetores[*i]->tamanho; (*j)++) {
+            if (b->vetores[*i]->vetor[*j] == valor) return;
+        }
+    }
+    *j--;
 }

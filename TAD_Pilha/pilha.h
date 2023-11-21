@@ -43,4 +43,5 @@ vector_t *cria_vector(int capacidade);
 
 void destroi_vector(vector_t **v);
 
+void find_data(branch_t *b, int valor, int *i, int *j);
 #endif //PROG_II_PILHA_H
