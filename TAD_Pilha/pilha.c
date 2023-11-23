@@ -46,7 +46,7 @@ void destroi_branch(branch_t **l){
 void destroi_vector(vector_t **v) {
     if (*v == NULL) return;
     free((*v)->vetor);
-    free(*v);
+//free(*v);
     *v = NULL;
 }
 
@@ -67,10 +67,12 @@ void desempilha(vector_t *v, int *elem) {
     v->tamanho--;
 }
 
-void encontra(branch_t *l, vector_t **pilha,int *j,int valor){
+
+void encontra(branch_t *l, vector_t **pilha, int *j, int valor) {
     int i = 0;
     int h;
     *j = 0;
+    *pilha = NULL;  // Initialize to NULL to avoid potential issues
 
     while (l->vetores[i] != NULL) {
         h = 0;
@@ -78,10 +80,10 @@ void encontra(branch_t *l, vector_t **pilha,int *j,int valor){
             h++;
         }
         if (h < l->vetores[i]->tamanho) {
+            *j = h;
+            *pilha = l->vetores[i];
             break;
         }
         i++;
     }
-    *j = h;
-    *pilha = l->vetores[i];
 }
