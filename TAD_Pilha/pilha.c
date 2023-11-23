@@ -50,11 +50,38 @@ void destroi_vector(vector_t **v) {
     *v = NULL;
 }
 
-void find_data(branch_t *b, int valor, int *i, int *j) {
-    for (*i = 0; *i < b->tamanho; (*i)++) {
-        for (*j = 0; *j < b->vetores[*i]->tamanho; (*j)++) {
-            if (b->vetores[*i]->vetor[*j] == valor) return;
+void empilha(vector_t *v, int *elem){
+    if(!v) return;
+    if(v->tamanho == v->capacidade) return;
+
+    v->vetor[v->tamanho] = *elem;
+    v->tamanho++;
+}
+
+void desempilha(vector_t *v, int *elem) {
+    if (!v) return;
+    if (!elem) return;
+    if (v->tamanho == 0) return;
+
+    *elem = v->vetor[v->tamanho - 1];
+    v->tamanho--;
+}
+
+void encontra(branch_t *l, vector_t **pilha,int *j,int valor){
+    int i = 0;
+    int h;
+    *j = 0;
+
+    while (l->vetores[i] != NULL) {
+        h = 0;
+        while (h < l->vetores[i]->tamanho && l->vetores[i]->vetor[h] != valor) {
+            h++;
         }
+        if (h < l->vetores[i]->tamanho) {
+            break;
+        }
+        i++;
     }
-    *j--;
+    *j = h;
+    *pilha = l->vetores[i];
 }

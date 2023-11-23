@@ -31,6 +31,8 @@ typedef struct vector vector_t;
  */
 branch_t* cria_branch(int n);
 
+vector_t *cria_vector(int capacidade);
+
 /**
  * @brief Destroiu um braço que armazenará todas as pilhas.
  * @details Verifica se a lista é válida.
@@ -39,9 +41,11 @@ branch_t* cria_branch(int n);
  */
 void destroi_branch(branch_t **l);
 
-vector_t *cria_vector(int capacidade);
-
 void destroi_vector(vector_t **v);
 
-void find_data(branch_t *b, int valor, int *i, int *j);
+void empilha(vector_t *v, int *elem);
+
+void desempilha(vector_t *v, int *elem);
+
+void encontra(branch_t *l,vector_t **pilha,int *j,int valor);
 #endif //PROG_II_PILHA_H
