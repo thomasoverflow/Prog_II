@@ -7,7 +7,7 @@ abb_t*		abb_cria		(){
     abb_t *new = (abb_t*) malloc(sizeof(abb_t));
     new->raiz = NULL;
     return new;
-}//PARA TESTE
+}
 
 void		abb_destroi		(abb_t **arv){
     if(*arv == NULL) return;
@@ -15,7 +15,7 @@ void		abb_destroi		(abb_t **arv){
     abb_destroi_rec((*arv)->raiz);
     free(*arv);
     *arv = NULL;
-}//PARA TESTES
+}
 
 int 		abb_insere		(abb_t *arv, elem_t chave){
     if(!arv) return -1;
@@ -45,7 +45,7 @@ int 		abb_insere		(abb_t *arv, elem_t chave){
         }
     }
     return 1;
-} //PARA TESTE
+}
 
 int 		abb_remove		(abb_t *arv, elem_t chave){
     if(!arv) return -1;
@@ -78,9 +78,18 @@ int 		abb_remove		(abb_t *arv, elem_t chave){
                 while((*new)->esq){
                     new = &((*new)->esq);
                 }//Chegamos no nó que irá substituir
-                (*ptr)->chave = (*new)->chave;
-                *new = NULL;
-                free(*new);
+                if((*new)->dir){
+                    no_t *temp;
+                    (*ptr)->chave = (*new)->chave;
+                    temp = (*new)->dir;
+                    (*new)->dir = NULL;
+                    free(temp);
+                }else{
+                    (*ptr)->chave = (*new)->chave;
+                    *new = NULL;
+                    free(*new);
+                }//caso esteja na folha
+
             }
             return 1;
         }
@@ -102,17 +111,19 @@ int 		abb_busca  		(abb_t *arv, elem_t chave){
         }
     }
     return 0;
-}//PARA TESTE
+}
 
 
 int main(){
     abb_t *l = abb_cria();
 
+    abb_insere(l,3);
+    abb_insere(l,1);
+    abb_insere(l,5);
+    abb_insere(l,6);
+    abb_insere(l,7);
 
-    //int k = abb_busca(l,21);
-    int k = abb_remove(l,37);
 
-    //k = abb_busca(l,21);
     abb_destroi(&l);
     return 0;
 }
