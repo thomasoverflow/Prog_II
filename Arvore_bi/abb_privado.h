@@ -47,5 +47,7 @@ struct abb {
 
 void		abb_destroi_rec		(no_t *n);
 
+no_t* cria_no(no_t* esq, no_t* dir, elem_t chave);
+
 #endif
 
