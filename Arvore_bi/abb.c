@@ -5,6 +5,7 @@
 
 abb_t*		abb_cria		(){
     abb_t *new = (abb_t*) malloc(sizeof(abb_t));
+    new->raiz = NULL;
     return new;
 }//PARA TESTE
 
@@ -46,12 +47,6 @@ int 		abb_insere		(abb_t *arv, elem_t chave){
     return 1;
 } //PARA TESTE
 
-
-/**
-* @return Retorna -1 caso a árvore não esteja inicializada. Se o
-* valor (chave) não for encontrado retorna 0. Caso consiga reali-
-* zar a remoção corretamente retorna 1.
-*/
 int 		abb_remove		(abb_t *arv, elem_t chave){
     if(!arv) return -1;
 
@@ -112,21 +107,12 @@ int 		abb_busca  		(abb_t *arv, elem_t chave){
 
 int main(){
     abb_t *l = abb_cria();
-    abb_insere(l,37);
-    abb_insere(l,59);
-    abb_insere(l,13);
-    abb_insere(l,3);
-    abb_insere(l,27);
-    abb_insere(l,21);
-    abb_insere(l,4);
-    abb_insere(l,42);
-    abb_insere(l,50);
-    abb_insere(l,1);
 
-    int k = abb_busca(l,21);
-    abb_remove(l,13);
 
-    k = abb_busca(l,21);
+    //int k = abb_busca(l,21);
+    int k = abb_remove(l,37);
 
+    //k = abb_busca(l,21);
+    abb_destroi(&l);
     return 0;
 }
