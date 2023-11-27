@@ -126,6 +126,7 @@ int 		abb_busca  		(abb_t *arv, elem_t chave){
             ptr = ptr->dir;
         }
     }
+
     return 0;
 }
 
