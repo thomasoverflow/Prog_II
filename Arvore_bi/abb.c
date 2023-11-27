@@ -73,11 +73,11 @@ int 		abb_remove		(abb_t *arv, elem_t chave){
                     free(*ptr);
                     (*p)->dir = NULL;
                 }
-            }else if((*ptr)->esq == NULL){//2a°Caso: Yo soy un nó apenas com un hijo a derecha
+            }else if((*ptr)->esq == NULL){//2a°Caso: Yo soy un nó apenas com un hijo a derecha (MUDAR)[
                 no_t *aux = (*ptr)->dir;
                 free(*ptr);
                 (*p)->dir = aux;
-            }else if((*ptr)->dir == NULL){//2b°Caso: Yo soy un nó apenas com un hijo a esquerda
+            }else if((*ptr)->dir == NULL){//2b°Caso: Yo soy un nó apenas com un hijo a esquerda (MUDAR)
                 no_t *aux = (*ptr)->esq;
                 if((*ptr)->chave == (*p)->esq->chave){
                     free(*ptr);
@@ -90,9 +90,9 @@ int 		abb_remove		(abb_t *arv, elem_t chave){
             }else{//3°Caso: Yo tengo two hijoss
                 no_t **new = &((*ptr)->esq);
 
-                while((*new)->esq){
+                while((*new)->dir){
                     p = new;
-                    new = &((*new)->esq);
+                    new = &((*new)->dir);
                 }//Chegamos no nó que irá substituir
                 if((*new)->dir){
                     (*ptr)->chave = (*new)->chave;
@@ -150,11 +150,17 @@ int main(){
     abb_insere(l,15);
     abb_insere(l,23);
     abb_insere(l,30);
+    abb_insere(l,3);
+    abb_insere(l,7);
+    abb_insere(l,1);
+    abb_insere(l,6);
+
+
 
 
 
     int t = abb_busca(l,60);
-    int k = abb_remove(l,23);
+    int k = abb_remove(l,10);
     //printf("%d\n",k);
      //k = abb_remove(l,1);
     //printf("%d\n",k);
