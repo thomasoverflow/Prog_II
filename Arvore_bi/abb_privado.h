@@ -47,7 +47,20 @@ struct abb {
 
 void		abb_destroi_rec		(no_t *n);
 
+/**
+ * @brief Esta função cria um nó para se inserir na ABB.
+ * @param nó da esquerda, nó da direita e a chave.
+ * @return Retorna um ponteiro de nó.
+ */
 no_t* cria_no(no_t* esq, no_t* dir, elem_t chave);
+
+/**
+ * @brief Faz a remoção recursiva da ABB. Se baseia na logica
+ * de que cada nó com dois ramos é uma subarvore.
+ * @param nó da subarvore e chave a ser retirado.
+ * @return Retorna um ponteiro de nó.
+ */
+no_t* remove_rec (no_t *no, elem_t chave);
 
 #endif
 

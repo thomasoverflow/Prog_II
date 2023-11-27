@@ -49,8 +49,72 @@ int 		abb_insere		(abb_t *arv, elem_t chave){
 
 int 		abb_remove		(abb_t *arv, elem_t chave){
     if(!arv) return -1;
+    if(abb_busca(arv,chave) == 0) return 0;
+    no_t **ptr = &arv->raiz;
+    if(ptr == NULL) return 0;
+    *ptr = remove_rec(*ptr,chave);
+    return 1;
+    /* MOODLE 7
+     /*int 		abb_remove		(abb_t *arv, elem_t chave){
+    if(!arv) return -1;
 
-    no_t *ptr = arv->raiz;
+    no_t **ptr = &(arv->raiz);
+    no_t **p = NULL;
+
+    while(*ptr != NULL){
+        if(chave < (*ptr)->chave){
+            p = ptr;
+            ptr = &((*ptr)->esq);
+        }
+        else if (chave > (*ptr)->chave){
+            p = ptr;
+            ptr = &((*ptr)->dir);
+        }
+        else{
+            //Achamos o nó -> armazenado em ptr
+            //1°Caso: Yo soy una FOLHA
+            if((*ptr)->esq == NULL && (*ptr)->dir == NULL) {
+                if((*p)->dir == NULL){
+                    free(*ptr);
+                    (*p)->esq = NULL;
+                }else{
+                    free(*ptr);
+                    (*p)->dir = NULL;
+                }
+            }else if((*ptr)->esq == NULL){//2a°Caso: Yo soy un nó apenas com un hijo a derecha
+                no_t *aux = *ptr;
+                *ptr = (*ptr)->dir;
+                free(aux);
+            }else if((*ptr)->dir == NULL){//2b°Caso: Yo soy un nó apenas com un hijo a esquerda
+                no_t *aux = *ptr;
+                *ptr = (*ptr)->esq;
+                free(aux);
+            }else{//3°Caso: Yo tengo two hijoss
+                no_t **new = &((*ptr)->dir);
+                //no_t **p = NULL;
+                while((*new)->esq){
+                    p = new;
+                    new = &((*new)->esq);
+                }//Chegamos no nó que irá substituir
+                if((*new)->dir){
+                    (*ptr)->chave = (*new)->chave;
+                    free(*new);
+                    (*p)->dir = NULL;
+                }else{
+                    (*ptr)->chave = (*new)->chave;
+                    free(*new);
+                    (*p)->esq = NULL;
+
+                }//caso esteja na folha
+
+            }
+            return 1;
+        }
+
+    }
+    return 0;
+}//PARA TESTE*/
+    /*
     no_t *p = NULL;
 
     while(ptr != NULL){
@@ -147,7 +211,7 @@ int 		abb_remove		(abb_t *arv, elem_t chave){
             return 1;
         }
     }
-    return 0;
+    return 0;*/
 }//PARA TESTE
 
 int 		abb_busca  		(abb_t *arv, elem_t chave){
@@ -202,7 +266,7 @@ int main(){
     int t = abb_busca(l,60);
     int k;
     //TESTA CASO 1
-    k = abb_remove(l,7);
+    k = abb_remove(l,37);
     //printf("%d",k);
     //TESTA CASO 2
     k = abb_remove(l,8);
@@ -212,7 +276,7 @@ int main(){
     //printf("%d",k);
     //TESTA CASO 1
     k = abb_remove(l,23);
-    k = abb_remove(l,42);
+    k = abb_remove(l,37);
     printf("%d",k);
 
 
